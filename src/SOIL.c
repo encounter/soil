@@ -104,6 +104,21 @@ unsigned int
 		unsigned int texture_check_size_enum
 	);
 
+int SOIL_Check_GL_Extension(char* extension_name) {
+  GLint n, i;
+  static const int GL_NUM_EXTENSIONS = 0x821D; // TODO: use a gl library
+
+  glGetIntegerv(GL_NUM_EXTENSIONS, &n);
+  for (i = 0; i < n; i++) {
+    printf("%s\n", glGetStringi(GL_EXTENSIONS, i));
+
+    if (NULL != strstr((char const*)glGetStringi(GL_EXTENSIONS, i), extension_name)) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 /*	and the code magic begins here [8^)	*/
 unsigned int
 	SOIL_load_OGL_texture
@@ -1876,10 +1891,7 @@ int query_NPOT_capability( void )
 	if( has_NPOT_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
-		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_non_power_of_two" ) )
-			)
+    if (SOIL_Check_GL_Extension("GL_ARB_texture_non_power_of_two") == 0)
 		{
 			/*	not there, flag the failure	*/
 			has_NPOT_capability = SOIL_CAPABILITY_NONE;
@@ -1899,15 +1911,11 @@ int query_tex_rectangle_capability( void )
 	if( has_tex_rectangle_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
-		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_rectangle" ) )
+    if (SOIL_Check_GL_Extension("GL_ARB_texture_rectangle") == 0
 		&&
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_EXT_texture_rectangle" ) )
+    SOIL_Check_GL_Extension("GL_EXT_texture_rectangle") == 0
 		&&
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_NV_texture_rectangle" ) )
+    SOIL_Check_GL_Extension("GL_NV_texture_rectangle") == 0
 			)
 		{
 			/*	not there, flag the failure	*/
@@ -1928,12 +1936,9 @@ int query_cubemap_capability( void )
 	if( has_cubemap_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
-		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_cube_map" ) )
+    if (SOIL_Check_GL_Extension("GL_ARB_texture_cube_map") == 0
 		&&
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_EXT_texture_cube_map" ) )
+        SOIL_Check_GL_Extension("GL_EXT_texture_cube_map") == 0
 			)
 		{
 			/*	not there, flag the failure	*/
@@ -1954,9 +1959,7 @@ int query_DXT_capability( void )
 	if( has_DXT_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
-		if( NULL == strstr(
-				(char const*)glGetString( GL_EXTENSIONS ),
-				"GL_EXT_texture_compression_s3tc" ) )
+    if (SOIL_Check_GL_Extension("GL_EXT_texture_compression_s3tc") == 0)
 		{
 			/*	not there, flag the failure	*/
 			has_DXT_capability = SOIL_CAPABILITY_NONE;
