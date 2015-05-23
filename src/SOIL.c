@@ -15,6 +15,7 @@
 
 #define SOIL_CHECK_FOR_GL_ERRORS 0
 
+#include "glew.h"
 #ifdef WIN32
 	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
@@ -106,7 +107,7 @@ unsigned int
 
 int SOIL_Check_GL_Extension(char* extension_name) {
   GLint n, i;
-  static const int GL_NUM_EXTENSIONS = 0x821D; // TODO: use a gl library
+ // static const int GL_NUM_EXTENSIONS = 0x821D; // TODO: use a gl library
 
   glGetIntegerv(GL_NUM_EXTENSIONS, &n);
   for (i = 0; i < n; i++) {
