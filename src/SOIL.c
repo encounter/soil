@@ -111,8 +111,6 @@ int SOIL_Check_GL_Extension(char* extension_name) {
 
   glGetIntegerv(GL_NUM_EXTENSIONS, &n);
   for (i = 0; i < n; i++) {
-    printf("%s\n", glGetStringi(GL_EXTENSIONS, i));
-
     if (NULL != strstr((char const*)glGetStringi(GL_EXTENSIONS, i), extension_name)) {
       return 1;
     }
