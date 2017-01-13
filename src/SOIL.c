@@ -15,7 +15,7 @@
 
 #define SOIL_CHECK_FOR_GL_ERRORS 0
 
-#include "glew.h"
+#include <GL/glew.h>
 #ifdef WIN32
 	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
